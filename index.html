@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ACE CAREER ALL｜エースキャリアオール</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--navy:#0F2C4C;--navy-light:#1A3F6B;--navy-dark:#091D33;
+--gold:#D4AF37;--gold-light:#E2C566;--gold-dark:#B8942E;
+--teal:#1A6B5C;--teal-light:#E8F4F0;
+--bg:#F5F6FA;--card:#FFFFFF;
+--text:#1A1A2E;--text-light:#6B7280;--text-muted:#9CA3AF;
+--border:#E5E7EB;--border-light:#F0F1F3;
+--red:#E74C3C;--red-bg:#FDECEC;
+--orange:#F39C12;--orange-bg:#FFF5E0;
+--green:#27AE60;--green-bg:#E8F8EE;
+--blue:#3498DB;--blue-bg:#EBF5FB;
+--shadow:0 1px 3px rgba(0,0,0,.06),0 2px 8px rgba(0,0,0,.04);
+--shadow-lg:0 4px 16px rgba(0,0,0,.08),0 8px 28px rgba(0,0,0,.05);
+--radius:8px;--radius-lg:12px;
+}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.6}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:240px;background:linear-gradient(180deg,var(--navy-dark) 0%,var(--navy) 100%);color:#fff;z-index:100;display:flex;flex-direction:column;overflow:hidden}
+.sidebar-brand{padding:22px 20px 18px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sidebar-brand h1{font-size:14px;font-weight:700;letter-spacing:.5px;color:var(--gold)}
+.sidebar-brand p{font-size:11px;color:rgba(255,255,255,.4);margin-top:4px;letter-spacing:1px}
+.nav{flex:1;padding:16px 0;overflow-y:auto}
+.nav-item{display:flex;align-items:center;padding:13px 24px;cursor:pointer;transition:all .25s;font-size:13px;gap:14px;color:rgba(255,255,255,.55);font-weight:400;border-left:3px solid transparent;letter-spacing:.3px}
+.nav-item:hover{background:rgba(255,255,255,.04);color:rgba(255,255,255,.85)}
+.nav-item.active{background:rgba(212,175,55,.12);color:var(--gold);border-left-color:var(--gold);font-weight:500}
+.nav-item .icon{width:20px;text-align:center;font-size:15px;opacity:.8}
+.nav-item .badge{margin-left:auto;background:var(--red);color:#fff;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700;min-width:20px;text-align:center}
+.sidebar-footer{padding:16px 24px;border-top:1px solid rgba(255,255,255,.06);font-size:11px;color:rgba(255,255,255,.2)}
+.main{margin-left:240px;min-height:100vh;overflow-x:hidden}
+.topbar{background:var(--card);border-bottom:1px solid var(--border);padding:16px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;backdrop-filter:blur(12px)}
+.topbar-title{display:flex;align-items:center;gap:12px}
+.topbar-title h2{font-size:15px;font-weight:600;color:var(--text)}
+.topbar-right{display:flex;align-items:center;gap:20px}
+.topbar-bell{position:relative;cursor:pointer;font-size:18px;padding:8px;border-radius:50%;transition:background .2s}
+.topbar-bell:hover{background:var(--bg)}
+.topbar-bell .dot{position:absolute;top:6px;right:6px;width:8px;height:8px;background:var(--red);border-radius:50%;border:2px solid var(--card)}
+.topbar-user{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-light)}
+.topbar-user .avatar{width:30px;height:30px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:600}
+.content{padding:28px 32px;max-width:1400px;overflow-x:hidden}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:28px}
+.kpi-card{background:var(--card);border-radius:var(--radius-lg);padding:22px 24px;box-shadow:var(--shadow);border:1px solid var(--border-light);position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s}
+.kpi-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.kpi-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.kpi-card.gold::after{background:var(--gold)}
+.kpi-card.teal::after{background:var(--teal)}
+.kpi-card.red::after{background:var(--red)}
+.kpi-card.blue::after{background:var(--blue)}
+.kpi-label{font-size:12px;color:var(--text-light);font-weight:500;letter-spacing:.5px;text-transform:uppercase}
+.kpi-value{font-size:28px;font-weight:700;color:var(--text);margin:6px 0 3px;letter-spacing:-.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:'Inter','Noto Sans JP',sans-serif;font-variant-numeric:tabular-nums}
+.kpi-sub{font-size:12px;color:var(--text-muted)}
+.kpi-trend{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;margin-top:6px}
+.kpi-trend.up{background:var(--green-bg);color:var(--green)}
+.kpi-trend.down{background:var(--red-bg);color:var(--red)}
+.panel{background:var(--card);border-radius:var(--radius-lg);box-shadow:var(--shadow);border:1px solid var(--border-light);margin-bottom:24px;max-width:100%;overflow-x:auto;overflow-y:hidden}
+.panel-header{padding:18px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.panel-header h3{font-size:15px;font-weight:600;color:var(--navy);letter-spacing:.3px}
+.panel-body{padding:20px 24px}
+.table-wrap{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;min-width:600px}
+th{padding:11px 14px;text-align:left;font-size:11px;color:var(--text-light);font-weight:600;text-transform:uppercase;letter-spacing:.6px;border-bottom:2px solid var(--border);background:var(--bg);white-space:nowrap}
+td{padding:12px 14px;border-bottom:1px solid var(--border-light);font-size:13px;word-break:break-word}
+tr:hover td{background:rgba(212,175,55,.02)}
+.badge-s{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.3px;white-space:nowrap}
+.badge-s::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor}
+.badge-s.confirmed{background:var(--green-bg);color:var(--green)}
+.badge-s.pending{background:var(--orange-bg);color:var(--orange)}
+.badge-s.overdue{background:var(--red-bg);color:var(--red)}
+.badge-s.info{background:var(--blue-bg);color:var(--blue)}
+.badge-s.done{background:#F0F0F0;color:#888}
+.btn{padding:9px 18px;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s;display:inline-flex;align-items:center;gap:7px;font-family:inherit}
+.btn-gold{background:linear-gradient(135deg,var(--gold) 0%,var(--gold-dark) 100%);color:#fff;box-shadow:0 2px 8px rgba(212,175,55,.25)}
+.btn-gold:hover{box-shadow:0 4px 16px rgba(212,175,55,.35);transform:translateY(-1px)}
+.btn-navy{background:var(--navy);color:#fff}
+.btn-navy:hover{background:var(--navy-light)}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text-light)}
+.btn-outline:hover{background:var(--bg);border-color:var(--text-muted)}
+.btn-sm{padding:6px 12px;font-size:12px;border-radius:6px}
+.btn-green{background:var(--green);color:#fff}
+.btn-red-outline{background:transparent;border:1px solid var(--red);color:var(--red)}
+.tabs{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:22px}
+.tab{padding:11px 22px;cursor:pointer;font-size:13px;font-weight:500;color:var(--text-light);border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .2s;letter-spacing:.3px}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold);font-weight:600}
+.tab:hover{color:var(--navy)}
+.global-filter{display:flex;align-items:center;gap:10px;padding:10px 16px;background:var(--card);border:1px solid var(--border-light);border-radius:var(--radius);margin-bottom:20px;box-shadow:var(--shadow);flex-wrap:wrap}
+.global-filter label{font-size:12px;font-weight:600;color:var(--text-light);letter-spacing:.3px;white-space:nowrap}
+.filter-chip{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;transition:all .2s;border:1px solid var(--border);color:var(--text-light);background:transparent}
+.filter-chip:hover{border-color:var(--gold);color:var(--gold)}
+.filter-chip.active{background:var(--navy);color:var(--gold);border-color:var(--navy)}
+.tl-item{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--border-light)}
+.tl-item:last-child{border:none}
+.tl-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);margin-top:7px;flex-shrink:0}
+.tl-content .tl-title{font-size:13px;font-weight:500;color:var(--text)}
+.tl-content .tl-desc{font-size:12px;color:var(--text-light);margin-top:2px}
+.tl-content .tl-time{font-size:11px;color:var(--text-muted);margin-top:3px}
+.p-card{background:var(--card);border:1px solid var(--border-light);border-radius:var(--radius-lg);padding:20px;transition:all .25s;overflow:hidden}
+.p-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-2px)}
+.p-card h4{font-family:'Noto Sans JP',sans-serif;font-size:15px;color:var(--navy);margin-bottom:10px;display:flex;align-items:center;gap:8px;word-break:break-word}
+.p-card .meta{font-size:12px;color:var(--text-light);line-height:2;word-break:break-word}
+.p-card .meta strong{color:var(--text);font-weight:500}
+.progress{height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.progress .fill{height:100%;border-radius:3px;transition:width .8s ease}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px}
+.alert-item{padding:16px 20px;border-left:4px solid;margin-bottom:10px;border-radius:0 var(--radius) var(--radius) 0;font-size:13px;transition:opacity .2s}
+.alert-item.critical{border-color:var(--red);background:var(--red-bg)}
+.alert-item.warning{border-color:var(--orange);background:var(--orange-bg)}
+.alert-item.info{border-color:var(--blue);background:var(--blue-bg)}
+.alert-item .a-title{font-weight:600;margin-bottom:3px;font-size:13px}
+.alert-item .a-body{color:var(--text-light);font-size:12px}
+.alert-item .a-time{font-size:11px;color:var(--text-muted);margin-top:6px}
+.chat-wrap{display:flex;flex-direction:column;height:calc(100vh - 160px);background:var(--card);border-radius:var(--radius-lg);box-shadow:var(--shadow);border:1px solid var(--border-light);overflow:hidden}
+.chat-msgs{flex:1;overflow-y:auto;padding:24px}
+.chat-msg{display:flex;gap:12px;margin-bottom:18px;max-width:82%}
+.chat-msg.user{margin-left:auto;flex-direction:row-reverse}
+.chat-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.chat-msg.ai .chat-av{background:var(--navy);color:#fff}
+.chat-msg.user .chat-av{background:var(--blue);color:#fff}
+.chat-bubble{padding:14px 18px;border-radius:16px;font-size:13px;line-height:1.7;letter-spacing:.2px}
+.chat-msg.ai .chat-bubble{background:var(--bg);border:1px solid var(--border-light);border-top-left-radius:4px;color:var(--text)}
+.chat-msg.user .chat-bubble{background:var(--navy);color:#fff;border-top-right-radius:4px}
+.chat-input-bar{padding:18px 24px;border-top:1px solid var(--border);display:flex;gap:10px;background:var(--bg)}
+.chat-input-bar input{flex:1}
+.form-control{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;transition:all .2s;background:var(--card);box-sizing:border-box}
+.form-control:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,175,55,.12)}
+.loading-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:20px}
+.loading-spinner{width:48px;height:48px;border:4px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.sync-bar{display:flex;align-items:center;gap:12px;padding:8px 16px;background:var(--green-bg);border:1px solid rgba(39,174,96,.2);border-radius:var(--radius);margin-bottom:16px;font-size:12px;color:var(--green)}
+.sync-bar.error{background:var(--red-bg);border-color:rgba(231,76,60,.2);color:var(--red)}
+@media(max-width:900px){
+.sidebar{width:56px}.sidebar-brand h1,.sidebar-brand p,.nav-item span:not(.icon),.nav-item .badge,.sidebar-footer{display:none}.nav-item{padding:14px 18px;justify-content:center}.main{margin-left:56px}
+.kpi-grid{grid-template-columns:repeat(2,1fr)}.grid-2,.grid-3{grid-template-columns:1fr}.content{padding:20px 16px}
+table{min-width:500px}.global-filter{flex-wrap:wrap}
+}
+@media(max-width:480px){.kpi-grid{grid-template-columns:1fr}.topbar{padding:12px 16px}.content{padding:16px 12px}
+.kpi-value{font-size:22px}
+}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{transform:translateY(8px);opacity:0}to{transform:translateY(0);opacity:1}}
+.animate{animation:slideUp .35s ease-out}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<script type="text/babel">
+const {useState,useEffect,useRef,useCallback}=React;
+
+// ========== 設定 ==========
+const SHEET_ID='1cj_VW9cyQjSIr2poEFTEiU6sxzx9kB3e';
+const SHEETS={cases:'案件一覧',staff:'スタッフ',partners:'取引先'};
+
+const BIZ=[
+{id:'mobile',name:'携帯販売',color:'#D4AF37'},
+{id:'fp',name:'FP委託',color:'#ED7D31'},
+{id:'reform',name:'リフォーム',color:'#27AE60'},
+{id:'realestate',name:'不動産',color:'#3498DB'},
+{id:'gas',name:'ガス',color:'#9B59B6'},
+{id:'hr',name:'人材紹介',color:'#E74C3C'},
+];
+const bizNameMap={mobile:'携帯販売',fp:'FP委託',reform:'リフォーム',realestate:'不動産',gas:'ガス',hr:'人材紹介'};
+const bizIdMap={'携帯販売':'mobile','FP委託':'fp','リフォーム':'reform','不動産':'realestate','ガス':'gas','人材紹介':'hr'};
+
+// ========== Google Sheets gviz データ取得 ==========
+function gvizUrl(sheetName){
+  return `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
+}
+
+function parseGviz(text){
+  const s=text.indexOf('{'),e=text.lastIndexOf('}');
+  if(s<0||e<0)throw new Error('gviz parse error');
+  return JSON.parse(text.substring(s,e+1));
+}
+
+// 列ヘッダーを自動検出してマッピング
+function detectColumns(cols){
+  const map={};
+  cols.forEach((c,i)=>{
+    const l=(c.label||'').toLowerCase();
+    if(l.includes('日付'))map.date=i;
+    else if(l.includes('事業部'))map.biz=i;
+    else if(l.includes('案件名'))map.name=i;
+    else if(l.includes('クライアント')||l.includes('発注元'))map.client=i;
+    else if(l.includes('売上'))map.amount=i;
+    else if(l.includes('交通費'))map.transport=i;
+    else if(l.includes('稼働者'))map.person=i;
+    else if(l.includes('所属')||l.includes('取引先')||l.includes('支払先'))map.belong=i;
+    else if(l.includes('原価'))map.cost=i;
+    else if(l.includes('粗利'))map.profit=i;
+    else if(l.includes('ステータス'))map.status=i;
+    else if(l.includes('請求月'))map.billMonth=i;
+    else if(l.includes('支払期日'))map.payDue=i;
+    else if(l.includes('備考'))map.notes=i;
+  });
+  return map;
+}
+
+function cellVal(row,idx){
+  if(idx===undefined||idx===null)return null;
+  const c=row.c?.[idx];
+  return c?.v??null;
+}
+function cellStr(row,idx){return String(cellVal(row,idx)||'');}
+function cellNum(row,idx){return parseFloat(cellVal(row,idx))||0;}
+
+const statusMap={'確認済':'confirmed','未確認':'pending','進行中':'in_progress','完了':'confirmed'};
+
+function parseCases(json){
+  const cm=detectColumns(json.table.cols);
+  return json.table.rows.filter(r=>cellStr(r,cm.name)).map((r,i)=>{
+    const amount=cellNum(r,cm.amount);
+    const cost=cellNum(r,cm.cost);
+    const transport=cellNum(r,cm.transport);
+    const rawStatus=cellStr(r,cm.status);
+    return{
+      id:i+1,
+      date:cellStr(r,cm.date).slice(0,10),
+      biz:bizIdMap[cellStr(r,cm.biz)]||'mobile',
+      name:cellStr(r,cm.name),
+      client:cellStr(r,cm.client),
+      amount,
+      transport,
+      person:cellStr(r,cm.person),
+      belong:cellStr(r,cm.belong),
+      cost,
+      profit:amount-cost-transport,
+      status:statusMap[rawStatus]||'pending',
+      billing:'not_entered',
+      billMonth:cellStr(r,cm.billMonth).slice(0,7),
+      payDue:cellStr(r,cm.payDue).slice(0,10),
+      notes:cellStr(r,cm.notes),
+    };
+  });
+}
+
+function parseStaff(json){
+  const cols=json.table.cols;
+  return json.table.rows.filter(r=>cellStr(r,0)).map((r,i)=>({
+    id:i+1,
+    name:cellStr(r,0),
+    dept:cellStr(r,1),
+    rate:cellNum(r,2),
+    incentive:cellNum(r,3),
+    type:cellStr(r,4),
+    belong:cellStr(r,4).includes('自社')?'自社':cellStr(r,1),
+    contact:cellStr(r,5),
+  }));
+}
+
+function parsePartners(json){
+  const cols=json.table.cols;
+  const clients=[];const partners=[];
+  json.table.rows.filter(r=>cellStr(r,0)).forEach((r,i)=>{
+    const entry={
+      id:i+1,
+      name:cellStr(r,0),
+      dept:cellStr(r,1),
+      terms:cellStr(r,2),
+      rate:cellStr(r,3),
+      contact:cellStr(r,4),
+      note:cellStr(r,5),
+      category:cellStr(r,6),
+    };
+    if(cellStr(r,6).includes('パートナー'))partners.push(entry);
+    else clients.push(entry);
+  });
+  return{clients,partners};
+}
+
+// ========== メインアプリ ==========
+function App(){
+const[page,setPage]=useState('dashboard');
+const[cases,setCases]=useState([]);
+const[clients,setClients]=useState([]);
+const[partners,setPartners]=useState([]);
+const[staff,setStaff]=useState([]);
+const[alerts,setAlerts]=useState([]);
+const[chatMsgs,setChatMsgs]=useState([{role:'ai',text:'エースキャリアオール AIアシスタントです。\n\nスプレッドシートから自動読み込まれたデータに基づいて回答します。\n\n質問例：\n・「今月の請求対象を教えて」\n・「支払いスケジュール」\n・「自社 vs パートナー」\n・「売上サマリー」'}]);
+const[bizFilter,setBizFilter]=useState('all');
+const[loading,setLoading]=useState(true);
+const[syncTime,setSyncTime]=useState(null);
+const[syncError,setSyncError]=useState(null);
+const[hasTransport,setHasTransport]=useState(false);
+
+// データ読み込み
+const loadData=useCallback(()=>{
+  setLoading(true);setSyncError(null);
+  const base=gvizUrl(SHEETS.cases);
+  const staffUrl=gvizUrl(SHEETS.staff);
+  const partnerUrl=gvizUrl(SHEETS.partners);
+
+  Promise.all([
+    fetch(base).then(r=>r.text()).then(parseGviz),
+    fetch(staffUrl).then(r=>r.text()).then(parseGviz),
+    fetch(partnerUrl).then(r=>r.text()).then(parseGviz),
+  ]).then(([cJson,sJson,pJson])=>{
+    const parsedCases=parseCases(cJson);
+    setCases(parsedCases);
+    setStaff(parseStaff(sJson));
+    const{clients:cl,partners:pt}=parsePartners(pJson);
+    setClients(cl);setPartners(pt);
+
+    // 交通費列の有無を検出
+    const cm=detectColumns(cJson.table.cols);
+    setHasTransport(cm.transport!==undefined);
+
+    // アラート自動生成
+    const now=new Date();
+    const newAlerts=[];
+    parsedCases.forEach(c=>{
+      if(c.payDue){
+        const d=Math.ceil((new Date(c.payDue)-now)/(864e5));
+        if(d<=7&&d>=0)newAlerts.push({id:'pay-'+c.id,type:'warning',title:'支払い期日が近づいています',msg:`${c.name}（¥${c.cost.toLocaleString()}）→ 期日: ${c.payDue}`,time:'自動検出',read:false});
+      }
+      if(c.status==='pending')newAlerts.push({id:'pend-'+c.id,type:'info',title:'未確認案件',msg:`${c.name} が未確認です`,time:'自動検出',read:false});
+    });
+    setAlerts(newAlerts);
+    setSyncTime(new Date().toLocaleTimeString('ja-JP'));
+    setLoading(false);
+  }).catch(err=>{
+    console.error('データ読み込みエラー:',err);
+    setSyncError('スプレッドシートの読み込みに失敗しました。共有設定を確認してください。');
+    setLoading(false);
+  });
+},[]);
+
+useEffect(()=>{loadData();},[loadData]);
+
+const filteredCases=bizFilter==='all'?cases:cases.filter(c=>c.biz===bizFilter);
+const unread=alerts.filter(a=>!a.read).length;
+
+const nav=[
+{id:'dashboard',icon:'📊',label:'ダッシュボード'},
+{id:'cases',icon:'📋',label:'案件管理'},
+{id:'partners',icon:'🤝',label:'契約マスター'},
+{id:'billing',icon:'💰',label:'請求・支払い'},
+{id:'ai',icon:'🤖',label:'AIアシスタント'},
+{id:'alerts',icon:'🔔',label:'アラート'},
+{id:'reports',icon:'📈',label:'レポート'},
+];
+
+if(loading)return<div className="loading-wrap"><div className="loading-spinner"/><div style={{fontSize:14,color:'var(--text-light)'}}>スプレッドシートからデータを読み込み中...</div></div>;
+
+return(<>
+<div className="sidebar">
+<div className="sidebar-brand"><h1>ACE CAREER ALL</h1><p>エースキャリアオール</p></div>
+<div className="nav">
+{nav.map(n=><div key={n.id} className={`nav-item ${page===n.id?'active':''}`} onClick={()=>setPage(n.id)}>
+<span className="icon">{n.icon}</span><span>{n.label}</span>
+{n.id==='alerts'&&unread>0&&<span className="badge">{unread}</span>}
+</div>)}
+</div>
+<div className="sidebar-footer">v3.0 | ライブ同期版</div>
+</div>
+
+<div className="main">
+<div className="topbar">
+<div className="topbar-title"><h2>{nav.find(n=>n.id===page)?.icon} {nav.find(n=>n.id===page)?.label}</h2></div>
+<div className="topbar-right">
+<button className="btn btn-outline btn-sm" onClick={loadData} style={{gap:5}}>🔄 再読込</button>
+<div className="topbar-bell" onClick={()=>setPage('alerts')}>🔔{unread>0&&<span className="dot"/>}</div>
+<div className="topbar-user"><div className="avatar">R</div><span>管理者</span></div>
+</div>
+</div>
+<div className="content animate" key={page}>
+
+{/* 同期ステータスバー */}
+{syncError?<div className="sync-bar error">⚠️ {syncError}</div>
+:syncTime&&<div className="sync-bar">✅ スプレッドシートと同期済み（{syncTime}）<span style={{marginLeft:'auto',cursor:'pointer',fontWeight:600}} onClick={loadData}>🔄 更新</span></div>}
+
+{/* グローバル事業部フィルター */}
+{!['ai','alerts'].includes(page)&&<div className="global-filter">
+<label>🏢 事業部</label>
+<span className={`filter-chip ${bizFilter==='all'?'active':''}`} onClick={()=>setBizFilter('all')}>全て</span>
+{BIZ.map(b=><span key={b.id} className={`filter-chip ${bizFilter===b.id?'active':''}`} onClick={()=>setBizFilter(b.id)} style={bizFilter===b.id?{background:b.color,borderColor:b.color,color:'#fff'}:{}}>{b.name}</span>)}
+</div>}
+
+{page==='dashboard'&&<Dashboard cases={filteredCases} allCases={cases} alerts={alerts} setPage={setPage} bizFilter={bizFilter} hasTransport={hasTransport}/>}
+{page==='cases'&&<CasesPage cases={filteredCases} hasTransport={hasTransport}/>}
+{page==='partners'&&<PartnersPage clients={clients} partners={partners} staff={staff} cases={filteredCases} bizFilter={bizFilter}/>}
+{page==='billing'&&<BillingPage cases={filteredCases} clients={clients} partners={partners} hasTransport={hasTransport}/>}
+{page==='ai'&&<AIPage msgs={chatMsgs} setMsgs={setChatMsgs} cases={cases} clients={clients} partners={partners} staff={staff} hasTransport={hasTransport}/>}
+{page==='alerts'&&<AlertsPage alerts={alerts} setAlerts={setAlerts}/>}
+{page==='reports'&&<ReportsPage cases={filteredCases} hasTransport={hasTransport}/>}
+</div></div>
+</>);
+}
+
+function EmptyState({icon,title,sub}){return<div style={{textAlign:'center',padding:'60px 20px'}}><div style={{fontSize:48,marginBottom:16}}>{icon}</div><div style={{fontSize:16,fontWeight:600,color:'var(--text)',marginBottom:6}}>{title}</div><div style={{fontSize:13,color:'var(--text-muted)'}}>{sub}</div></div>}
+
+// ============ DASHBOARD ============
+function Dashboard({cases,allCases,alerts,setPage,bizFilter,hasTransport}){
+if(!cases.length)return<EmptyState icon="📊" title="該当するデータなし" sub="事業部フィルターを変更してください"/>;
+const now=new Date();const cm=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+const mCases=cases.filter(c=>c.billMonth===cm);
+const rev=mCases.reduce((s,c)=>s+c.amount,0);
+const cost=mCases.reduce((s,c)=>s+c.cost+(c.transport||0),0);
+const selfCount=mCases.filter(c=>c.belong==='自社'||c.belong==='自社スタッフ').length;
+const ptCount=mCases.length-selfCount;
+
+return<>
+<div className="kpi-grid">
+<div className="kpi-card gold"><div className="kpi-label">{cm.slice(5)}月 売上合計</div><div className="kpi-value">¥{rev.toLocaleString()}</div><div className="kpi-sub">{mCases.length}件（確認済 {mCases.filter(c=>c.status==='confirmed').length}件）</div></div>
+<div className="kpi-card teal"><div className="kpi-label">{cm.slice(5)}月 原価合計</div><div className="kpi-value">¥{cost.toLocaleString()}</div><div className="kpi-sub">{hasTransport?'原価+交通費':'外注費等'}</div></div>
+<div className="kpi-card blue"><div className="kpi-label">粗利合計</div><div className="kpi-value">¥{(rev-cost).toLocaleString()}</div><div className="kpi-sub">自社{selfCount}件 / パートナー{ptCount}件</div></div>
+<div className="kpi-card red"><div className="kpi-label">要対応アラート</div><div className="kpi-value">{alerts.filter(a=>!a.read).length}<span style={{fontSize:14}}>件</span></div><div className="kpi-sub" style={{cursor:'pointer',color:'var(--blue)'}} onClick={()=>setPage('alerts')}>→ アラート確認</div></div>
+</div>
+
+<div className="grid-2">
+<div className="panel"><div className="panel-header"><h3>📋 直近の案件</h3></div><div className="panel-body">
+{cases.slice(-6).reverse().map((c,i)=><div className="tl-item" key={i}><div className="tl-dot"/><div className="tl-content"><div className="tl-title">{c.name}</div><div className="tl-desc">{c.person}（{c.belong||'-'}）| {c.client||'-'} | ¥{c.amount.toLocaleString()}</div><div className="tl-time">{c.date}</div></div></div>)}
+</div></div>
+
+<div className="panel"><div className="panel-header"><h3>📊 事業部別 売上</h3></div><div className="panel-body">
+{BIZ.map(b=>{const bc=cases.filter(c=>c.biz===b.id);const bt=bc.reduce((s,c)=>s+c.amount,0);if(!bt)return null;const gt=cases.reduce((s,c)=>s+c.amount,0);
+return<div key={b.id} style={{display:'flex',alignItems:'center',gap:12,padding:'10px 0',borderBottom:'1px solid var(--border-light)'}}>
+<span style={{display:'inline-block',width:10,height:10,borderRadius:3,background:b.color,flexShrink:0}}/><span style={{flex:1,fontSize:13}}>{b.name}</span>
+<span style={{fontWeight:700,fontFamily:"'Inter','Noto Sans JP',sans-serif",fontSize:13}}>¥{bt.toLocaleString()}</span>
+<div className="progress" style={{width:80}}><div className="fill" style={{width:`${gt>0?bt/gt*100:0}%`,background:b.color}}/></div>
+<span style={{fontSize:11,color:'var(--text-muted)',width:40,textAlign:'right'}}>{gt>0?(bt/gt*100).toFixed(0):0}%</span>
+</div>})}
+</div></div>
+</div></>;
+}
+
+// ============ CASES ============
+function CasesPage({cases,hasTransport}){
+const[search,setSearch]=useState('');
+const filtered=cases.filter(c=>{if(search&&!c.name.includes(search)&&!(c.client||'').includes(search)&&!c.person.includes(search)&&!(c.belong||'').includes(search))return false;return true});
+const sCls={confirmed:'confirmed',pending:'pending',in_progress:'info'};
+const sLbl={confirmed:'確認済',pending:'未確認',in_progress:'進行中'};
+
+if(!cases.length)return<EmptyState icon="📋" title="該当する案件なし" sub="事業部フィルターを変更してください"/>;
+
+return<><div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:18,flexWrap:'wrap',gap:10}}>
+<input className="form-control" style={{width:300}} placeholder="🔍 案件名・クライアント・稼働者・所属で検索" value={search} onChange={e=>setSearch(e.target.value)}/>
+<a href={`https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit`} target="_blank" rel="noopener" className="btn btn-gold" style={{textDecoration:'none'}}>📝 スプレッドシートで編集</a>
+</div>
+
+{filtered.length?<div className="panel"><table><thead><tr>
+<th>案件名</th><th>事業部</th><th>クライアント</th><th>売上金額</th>
+{hasTransport&&<th>交通費</th>}
+<th>稼働者</th><th>所属</th><th>原価</th><th>粗利</th><th>ステータス</th>
+</tr></thead><tbody>
+{filtered.map(c=>{const b=BIZ.find(x=>x.id===c.biz);return<tr key={c.id}>
+<td style={{fontWeight:600}}>{c.name}</td>
+<td><span style={{display:'inline-block',width:8,height:8,borderRadius:2,background:b?.color,marginRight:8}}/>{b?.name}</td>
+<td style={{fontSize:12}}>{c.client||'-'}</td>
+<td style={{fontWeight:700,fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>¥{c.amount.toLocaleString()}</td>
+{hasTransport&&<td style={{fontFamily:"'Inter','Noto Sans JP',sans-serif",color:'var(--text-light)'}}>¥{(c.transport||0).toLocaleString()}</td>}
+<td style={{fontWeight:500}}>{c.person||'-'}</td>
+<td><span className={`badge-s ${(c.belong||'').includes('自社')?'confirmed':'info'}`}>{c.belong||'-'}</span></td>
+<td style={{fontFamily:"'Inter','Noto Sans JP',sans-serif",color:'var(--text-light)'}}>¥{(c.cost||0).toLocaleString()}</td>
+<td style={{fontWeight:600,color:c.profit>=0?'var(--green)':'var(--red)',fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>¥{c.profit.toLocaleString()}</td>
+<td><span className={`badge-s ${sCls[c.status]||'pending'}`}>{sLbl[c.status]||c.status}</span></td>
+</tr>})}
+</tbody></table></div>:<EmptyState icon="🔍" title="検索結果なし" sub="検索条件を変更してください"/>}
+</>;
+}
+
+// ============ PARTNERS ============
+function PartnersPage({clients,partners,staff,cases,bizFilter}){
+const[tab,setTab]=useState('c');
+const[detail,setDetail]=useState(null);
+const bizNameMapR=bizNameMap;
+const fc=bizFilter==='all'?clients:clients.filter(c=>(c.dept||'').includes(bizNameMapR[bizFilter]||''));
+const fp=bizFilter==='all'?partners:partners.filter(p=>(p.dept||'').includes(bizNameMapR[bizFilter]||''));
+const fs=bizFilter==='all'?staff:staff.filter(s=>s.dept==='全般'||(s.dept||'').includes(bizNameMapR[bizFilter]||''));
+
+function clientBilling(cl){return cases.filter(c=>c.client&&(c.client===cl.name||c.client.includes(cl.name.replace('㈱',''))));}
+function partnerCost(pt){return cases.filter(c=>c.cost>0&&(c.belong===pt.name||(c.belong||'').includes(pt.name)));}
+
+return<><div className="tabs">
+<div className={`tab ${tab==='c'?'active':''}`} onClick={()=>setTab('c')}>🏢 クライアント</div>
+<div className={`tab ${tab==='p'?'active':''}`} onClick={()=>setTab('p')}>🔧 パートナー</div>
+<div className={`tab ${tab==='s'?'active':''}`} onClick={()=>setTab('s')}>👤 稼働者</div>
+</div>
+
+{tab==='c'&&(fc.length?<div className="grid-2">{fc.map(cl=>{const cCases=clientBilling(cl);const totalRev=cCases.reduce((s,c)=>s+c.amount,0);
+return<div className="p-card" key={cl.id} style={{cursor:'pointer'}} onClick={()=>setDetail(detail===cl.id?null:cl.id)}>
+<h4>🏢 {cl.name}</h4>
+<div className="meta">
+<div><strong>事業部：</strong>{cl.dept}</div>
+<div><strong>単価/レート：</strong>{cl.rate}</div>
+<div><strong>請求条件：</strong>{cl.terms}</div>
+<div><strong>先方担当：</strong>{cl.contact}</div>
+<div style={{marginTop:8,paddingTop:8,borderTop:'1px solid var(--border-light)'}}>
+<strong>請求予定：</strong><span style={{fontWeight:700,color:'var(--green)',fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>¥{totalRev.toLocaleString()}</span>（{cCases.length}件）
+</div></div>
+{detail===cl.id&&cCases.length>0&&<div style={{marginTop:12,background:'var(--bg)',borderRadius:8,padding:12}}>
+<div style={{fontSize:11,fontWeight:600,color:'var(--text-light)',marginBottom:8}}>請求対象案件</div>
+{cCases.map(c=><div key={c.id} style={{display:'flex',justifyContent:'space-between',padding:'6px 0',borderBottom:'1px solid var(--border-light)',fontSize:12}}>
+<span>{c.name}</span><span style={{fontWeight:600,fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>¥{c.amount.toLocaleString()}</span>
+</div>)}</div>}
+</div>})}</div>:<EmptyState icon="🏢" title="該当するクライアントなし" sub="事業部フィルターを変更してください"/>)}
+
+{tab==='p'&&(fp.length?<><div style={{marginBottom:12,fontSize:12,color:'var(--text-light)',background:'var(--orange-bg)',padding:'10px 16px',borderRadius:8}}>💡 パートナー＝請求してくる先（外注先・人材供給元）</div>
+<div className="grid-2">{fp.map(pt=>{const pCases=partnerCost(pt);const totalCost=pCases.reduce((s,c)=>s+(c.cost||0),0);
+return<div className="p-card" key={pt.id} style={{cursor:'pointer'}} onClick={()=>setDetail(detail===('p'+pt.id)?null:'p'+pt.id)}>
+<h4>🔧 {pt.name}</h4>
+<div className="meta">
+<div><strong>事業部：</strong>{pt.dept}</div>
+<div><strong>単価/レート：</strong>{pt.rate}</div>
+<div><strong>請求条件：</strong>{pt.terms}</div>
+<div><strong>先方担当：</strong>{pt.contact}</div>
+<div style={{marginTop:8,paddingTop:8,borderTop:'1px solid var(--border-light)'}}>
+<strong>支払予定：</strong><span style={{fontWeight:700,color:'var(--red)',fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>¥{totalCost.toLocaleString()}</span>（{pCases.length}件）
+</div></div>
+{detail===('p'+pt.id)&&pCases.length>0&&<div style={{marginTop:12,background:'var(--bg)',borderRadius:8,padding:12}}>
+<div style={{fontSize:11,fontWeight:600,color:'var(--text-light)',marginBottom:8}}>関連案件（原価＝パートナーへの支払い）</div>
+{pCases.map(c=><div key={c.id} style={{display:'flex',justifyContent:'space-between',padding:'6px 0',borderBottom:'1px solid var(--border-light)',fontSize:12}}>
+<span>{c.name}</span><span style={{fontWeight:600,color:'var(--red)',fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>¥{(c.cost||0).toLocaleString()}</span>
+</div>)}</div>}
+</div>})}</div></>:<EmptyState icon="🔧" title="該当するパートナーなし" sub="事業部フィルターを変更してください"/>)}
+
+{tab==='s'&&(fs.length?<div className="panel"><div className="panel-header"><h3>👤 稼働者一覧</h3></div>
+<table><thead><tr><th>名前</th><th>所属</th><th>担当事業部</th><th>雇用形態</th><th>時給</th><th>インセンティブ</th></tr></thead><tbody>
+{fs.map(s=><tr key={s.id}><td style={{fontWeight:600}}>{s.name}</td>
+<td><span className={`badge-s ${(s.belong||'').includes('自社')?'confirmed':'info'}`}>{s.belong||s.dept}</span></td>
+<td>{s.dept}</td>
+<td><span className="badge-s pending">{s.type}</span></td>
+<td style={{fontFamily:"'Inter','Noto Sans JP',sans-serif",fontWeight:600}}>{s.rate>0?`¥${s.rate.toLocaleString()}/h`:'-'}</td>
+<td>{s.incentive>0?`¥${s.incentive.toLocaleString()}/件`:'-'}</td>
+</tr>)}
+</tbody></table></div>:<EmptyState icon="👤" title="該当する稼働者なし" sub="事業部フィルターを変更してください"/>)}
+</>;
+}
+
+// ============ BILLING ============
+function BillingPage({cases,clients,partners,hasTransport}){
+const[tab,setTab]=useState('out');
+const now=new Date();const cm=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+const mCases=cases.filter(c=>c.billMonth===cm);
+const tot=mCases.reduce((s,c)=>s+c.amount,0);
+const totalCostM=mCases.reduce((s,c)=>s+(c.cost||0)+(c.transport||0),0);
+const payments=cases.filter(c=>c.payDue&&c.cost>0).sort((a,b)=>a.payDue.localeCompare(b.payDue));
+
+if(!cases.length)return<EmptyState icon="💰" title="該当する請求データなし" sub="事業部フィルターを変更してください"/>;
+
+return<><div className="tabs">
+<div className={`tab ${tab==='out'?'active':''}`} onClick={()=>setTab('out')}>📤 クライアントへ請求</div>
+<div className={`tab ${tab==='in'?'active':''}`} onClick={()=>setTab('in')}>📥 パートナーへの支払い</div>
+<div className={`tab ${tab==='cal'?'active':''}`} onClick={()=>setTab('cal')}>📅 タイムライン</div>
+</div>
+
+{tab==='out'&&<><div className="kpi-grid" style={{gridTemplateColumns:'repeat(3,1fr)'}}>
+<div className="kpi-card gold"><div className="kpi-label">{cm.slice(5)}月 請求対象（売上）</div><div className="kpi-value" style={{fontSize:26}}>¥{tot.toLocaleString()}</div><div className="kpi-sub">{mCases.length}件</div></div>
+<div className="kpi-card teal"><div className="kpi-label">原価{hasTransport?'+交通費':''}</div><div className="kpi-value" style={{fontSize:26}}>¥{totalCostM.toLocaleString()}</div><div className="kpi-sub">パートナー・稼働者への支払い</div></div>
+<div className="kpi-card blue"><div className="kpi-label">粗利（売上-原価）</div><div className="kpi-value" style={{fontSize:26,color:'var(--green)'}}>¥{(tot-totalCostM).toLocaleString()}</div><div className="kpi-sub">粗利率 {tot>0?((tot-totalCostM)/tot*100).toFixed(1):0}%</div></div>
+</div>
+
+{/* クライアント別グループ */}
+{clients.map(cl=>{const clCases=mCases.filter(c=>c.client&&(c.client===cl.name||c.client.includes(cl.name.replace('㈱',''))));if(!clCases.length)return null;
+return<div className="panel" key={cl.id}><div className="panel-header"><h3>🏢 {cl.name}</h3><div style={{fontSize:12,color:'var(--text-light)'}}>{cl.terms}</div></div>
+<table><thead><tr><th>案件名</th><th>稼働者</th><th>所属</th><th>金額</th><th>ステータス</th></tr></thead><tbody>
+{clCases.map(c=><tr key={c.id}><td style={{fontWeight:600}}>{c.name}</td><td>{c.person||'-'}</td>
+<td><span className={`badge-s ${(c.belong||'').includes('自社')?'confirmed':'info'}`}>{c.belong||'-'}</span></td>
+<td style={{fontWeight:700,fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>¥{c.amount.toLocaleString()}</td>
+<td><span className={`badge-s ${c.status==='confirmed'?'confirmed':'pending'}`}>{c.status==='confirmed'?'確認済':'未確認'}</span></td></tr>)}
+<tr style={{background:'var(--bg)'}}><td style={{fontWeight:700}} colSpan="3">小計</td><td style={{fontWeight:700,fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>¥{clCases.reduce((s,c)=>s+c.amount,0).toLocaleString()}</td><td/></tr>
+</tbody></table></div>})}
+
+{/* 未紐付け案件 */}
+{(()=>{const unlinked=mCases.filter(c=>!clients.some(cl=>c.client&&(c.client===cl.name||c.client.includes(cl.name.replace('㈱','')))));
+if(!unlinked.length)return null;
+return<div className="panel"><div className="panel-header"><h3>📋 その他の案件（クライアント未紐付け）</h3></div>
+<table><thead><tr><th>案件名</th><th>クライアント</th><th>金額</th><th>ステータス</th></tr></thead><tbody>
+{unlinked.map(c=><tr key={c.id}><td style={{fontWeight:600}}>{c.name}</td><td>{c.client||'-'}</td>
+<td style={{fontWeight:700,fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>¥{c.amount.toLocaleString()}</td>
+<td><span className={`badge-s ${c.status==='confirmed'?'confirmed':'pending'}`}>{c.status==='confirmed'?'確認済':'未確認'}</span></td></tr>)}
+</tbody></table></div>})()}
+</>}
+
+{tab==='in'&&<>{payments.length>0&&payments.some(c=>Math.ceil((new Date(c.payDue)-now)/(864e5))<=7)&&<div className="alert-item critical" style={{marginBottom:20}}><div className="a-title">⚠️ 支払い期限が迫っています</div><div className="a-body">7日以内に期限を迎える支払いがあります。</div></div>}
+<div className="panel"><div className="panel-header"><h3>パートナーへの支払い一覧</h3></div>
+<table><thead><tr><th>期日</th><th>案件</th><th>支払先</th><th>原価（支払額）</th>{hasTransport&&<th>交通費</th>}<th>残日数</th><th>ステータス</th></tr></thead><tbody>
+{payments.map(c=>{const d=Math.ceil((new Date(c.payDue)-now)/(864e5));return<tr key={c.id}>
+<td style={{fontWeight:600}}>{c.payDue}</td><td>{c.name}</td><td>{c.belong||'-'}</td>
+<td style={{fontWeight:700,color:'var(--red)',fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>¥{(c.cost||0).toLocaleString()}</td>
+{hasTransport&&<td style={{fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>¥{(c.transport||0).toLocaleString()}</td>}
+<td><span style={{color:d<=7?'var(--red)':d<=14?'var(--orange)':'var(--green)',fontWeight:700}}>{d}日</span></td>
+<td>{d<=7?<span className="badge-s overdue">要対応</span>:<span className="badge-s pending">予定</span>}</td></tr>})}
+</tbody></table></div>
+</>}
+
+{tab==='cal'&&<div className="panel"><div className="panel-header"><h3>月次 請求・支払いタイムライン</h3></div><div className="panel-body">
+{[{d:'毎月15日',e:'ガス販売代理店C社 締日',t:'info'},{d:'毎月25日',e:'クライアント向け：請求対象案件を集計→請求書（案）自動生成',t:'warning'},{d:'毎月28日',e:'事務員が請求書を確認・修正',t:'warning'},{d:'毎月30日',e:'クライアントへ請求書を確定・送付',t:'critical'},{d:'毎月末',e:'パートナーからの請求書を確認・支払い計画書作成',t:'critical'},{d:'支払日5日前',e:'パートナーへの振込予約アラート自動送信',t:'critical'}].map((i,idx)=><div className={`alert-item ${i.t}`} key={idx}><div className="a-title">{i.d}</div><div className="a-body">{i.e}</div></div>)}
+</div></div>}
+</>;
+}
+
+// ============ AI CHAT ============
+function AIPage({msgs,setMsgs,cases,clients,partners,staff,hasTransport}){
+const[input,setInput]=useState('');
+const ref=useRef();
+useEffect(()=>{ref.current&&(ref.current.scrollTop=ref.current.scrollHeight)},[msgs]);
+
+function ai(text){
+const t=text.toLowerCase();
+if(t.includes('請求')&&(t.includes('今月')||t.includes('対象'))){
+const now2=new Date();const curM=`${now2.getFullYear()}-${String(now2.getMonth()+1).padStart(2,'0')}`;const m3=cases.filter(c=>c.billMonth===curM);const tot=m3.reduce((s,c)=>s+c.amount,0);const pend=m3.filter(c=>c.status!=='confirmed');
+return`📋 ${curM.slice(0,4)}年${curM.slice(5)}月の請求対象\n\n対象案件: ${m3.length}件\n合計金額: ¥${tot.toLocaleString()}\n\n【未確認 ${pend.length}件】\n${pend.map(c=>`・${c.name}（¥${c.amount.toLocaleString()}）→ クライアント: ${c.client||'-'}`).join('\n')}\n\n⚠️ 月末までに請求書発行が必要です。`}
+if(t.includes('単価')||t.includes('いくら')||t.includes('時給')){
+const allOrgs=[...clients.map(c=>({...c,orgType:'クライアント'})),...partners.map(p=>({...p,orgType:'パートナー'}))];
+const matched=allOrgs.filter(p=>text.includes(p.name)||(t.includes('ファースト')&&p.name.includes('ファースト'))||(t.includes('リフォーム')&&p.name.includes('リフォーム'))||(t.includes('ガス')&&p.name.includes('ガス')));
+if(matched.length)return matched.map(p=>`🔍 ${p.name}（${p.orgType}）\n・単価: ${p.rate}\n・請求条件: ${p.terms}\n・先方担当: ${p.contact}`).join('\n\n');
+return`🔍 該当する取引先が見つかりません。\n\n【クライアント】\n${clients.map(c=>`・${c.name}（${c.rate}）`).join('\n')}\n\n【パートナー】\n${partners.map(p=>`・${p.name}（${p.rate}）`).join('\n')}`}
+if(t.includes('スタッフ')||t.includes('staff')||t.includes('稼働者')){
+return`👤 稼働者一覧\n\n${staff.map(s=>`・${s.name}（${s.dept}）${s.type} ${s.rate>0?'時給¥'+s.rate.toLocaleString():''}`).join('\n')}`}
+if(t.includes('支払')||t.includes('振込')){
+return`💰 支払いスケジュール\n\n${cases.filter(c=>c.payDue).sort((a,b)=>a.payDue.localeCompare(b.payDue)).map(c=>{const d=Math.ceil((new Date(c.payDue)-new Date())/(864e5));return`・${c.payDue} | ${c.name} | ¥${c.cost.toLocaleString()} → ${c.belong||'-'} | ${d<=7?'⚠️要対応':'予定'}`}).join('\n')}`}
+if(t.includes('売上')||t.includes('合計')||t.includes('サマリー')){
+const gt=cases.reduce((s,c)=>s+c.amount,0);const gc=cases.reduce((s,c)=>s+c.cost+(c.transport||0),0);
+const selfC=cases.filter(c=>(c.belong||'').includes('自社'));const ptC=cases.filter(c=>c.belong&&!(c.belong||'').includes('自社'));
+return`📊 売上サマリー\n\n全案件: ${cases.length}件\n売上合計: ¥${gt.toLocaleString()}\n原価合計: ¥${gc.toLocaleString()}\n粗利合計: ¥${(gt-gc).toLocaleString()}\n粗利率: ${gt>0?((gt-gc)/gt*100).toFixed(1):0}%\n\n【内訳】\n自社稼�M: ${selfC.length}件（売上¥${selfC.reduce((s,c)=>s+c.amount,0).toLocaleString()}）\nパートナー稼働: ${ptC.length}件（売上¥${ptC.reduce((s,c)=>s+c.amount,0).toLocaleString()}）`}
+if((t.includes('自社')&&t.includes('パートナー'))||t.includes('内訳')||t.includes('所属')){
+const selfC=cases.filter(c=>(c.belong||'').includes('自社'));const ptC=cases.filter(c=>c.belong&&!(c.belong||'').includes('自社'));
+const selfRev=selfC.reduce((s,c)=>s+c.amount,0);const ptRev=ptC.reduce((s,c)=>s+c.amount,0);const ptCost=ptC.reduce((s,c)=>s+c.cost+(c.transport||0),0);
+return`📊 自社 vs パートナー 内訳\n\n【自社スタッフ稼働】${selfC.length}件\n売上: ¥${selfRev.toLocaleString()}\n原価: ¥0（自社のため）\n粗利: ¥${selfRev.toLocaleString()}\n\n【パートナー稼働】${ptC.length}件\n売上: ¥${ptRev.toLocaleString()}\n原価: ¥${ptCost.toLocaleString()}\n粗利: ¥${(ptRev-ptCost).toLocaleString()}\n\n${ptC.map(c=>`・${c.name} → ${c.belong}（稼働者:${c.person}）`).join('\n')}`}
+return`ご質問を璆解しました。以下をお試しください：\n\n・「今月の請求対象を教えて」\n・「ファーストプロジェクトの単価は？」\n・「支払いスケジュール」\n・「売上サマリー」\n・「自社 vs パートナー」\n・「稼働者一覧」`}
+
+function send(){if(!input.trim())return;const u=input.trim();setMsgs(p=>[...p,{role:'user',text:u}]);setInput('');setTimeout(()=>setMsgs(p=>[...p,{role:'ai',text:ai(u)}]),400)}
+
+return<div className="chat-wrap"><div className="chat-msgs" ref={ref}>{msgs.map((m,i)=><div key={i} className={`chat-msg ${m.role}`}><div className="chat-av">{m.role==='ai'?'🤖':'👤'}</div><div className="chat-bubble" style={{whiteSpace:'pre-wrap'}}>{m.text}</div></div>)}</div>
+<div className="chat-input-bar"><input className="form-control" placeholder="質問を入力..." value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>e.key==='Enter'&&send()}/><button className="btn btn-gold" onClick={send}>送信</button></div></div>;
+}
+
+// ============ ALERTS ============
+function AlertsPage({alerts,setAlerts}){
+return<><div style={{display:'flex',justifyContent:'space-between',marginBottom:18}}><span style={{fontSize:13,color:'var(--text-light)'}}>未読: {alerts.filter(a=>!a.read).length}件</span><button className="btn btn-outline btn-sm" onClick={()=>setAlerts(p=>p.map(a=>({...a,read:true})))}>全て既読</button></div>
+{alerts.length?alerts.map(a=><div key={a.id} className={`alert-item ${a.type}`} style={{opacity:a.read?.5:1,cursor:'pointer'}} onClick={()=>setAlerts(p=>p.map(x=>x.id===a.id?{...x,read:true}:x))}><div className="a-title">{a.read?'':'🔴 '}{a.title}</div><div className="a-body">{a.msg}</div><div className="a-time">{a.time}{a.read?' ✓既読':''}</div></div>):<EmptyState icon="🔔" title="アラートなし" sub="新しいアラートが発生するとここに表示されます"/>}
+</>;
+}
+
+// ============ REPORTS ============
+function ReportsPage({cases,hasTransport}){
+if(!cases.length)return<EmptyState icon="📈" title="該当するレポートデータなし" sub="事業部フィルターを変更してください"/>;
+const byP={};cases.forEach(c=>{const k=c.person||'未設定';if(!byP[k])byP[k]={t:0,n:0,cost:0,belong:c.belong||'-'};byP[k].t+=c.amount;byP[k].cost+=(c.cost||0)+(c.transport||0);byP[k].n++});
+const byB={};cases.forEach(c=>{if(!byB[c.biz])byB[c.biz]={t:0,n:0,cost:0};byB[c.biz].t+=c.amount;byB[c.biz].cost+=(c.cost||0)+(c.transport||0);byB[c.biz].n++});
+const gt=cases.reduce((s,c)=>s+c.amount,0);
+const gc=cases.reduce((s,c)=>s+(c.cost||0)+(c.transport||0),0);
+
+// 自社 vs パートナー
+const selfC=cases.filter(c=>(c.belong||'').includes('自社'));
+const ptC=cases.filter(c=>c.belong&&!(c.belong||'').includes('自社'));
+const selfRev=selfC.reduce((s,c)=>s+c.amount,0);
+const ptRev=ptC.reduce((s,c)=>s+c.amount,0);
+const ptCost=ptC.reduce((s,c)=>s+(c.cost||0)+(c.transport||0),0);
+
+return<><div className="kpi-grid" style={{gridTemplateColumns:'repeat(3,1fr)'}}>
+<div className="kpi-card gold"><div className="kpi-label">売上合計</div><div className="kpi-value" style={{fontSize:26}}>¥{gt.toLocaleString()}</div><div className="kpi-sub">{cases.length}件 | 粗利 ¥{(gt-gc).toLocaleString()}</div></div>
+<div className="kpi-card teal"><div className="kpi-label">粗利率</div><div className="kpi-value" style={{fontSize:26}}>{gt>0?((gt-gc)/gt*100).toFixed(1):0}<span style={{fontSize:14}}>%</span></div><div className="progress" style={{marginTop:8}}><div className="fill" style={{width:`${gt>0?(gt-gc)/gt*100:0}%`,background:'var(--gold)'}}/></div></div>
+<div className="kpi-card blue"><div className="kpi-label">自社 / パートナー</div><div className="kpi-value" style={{fontSize:22}}>{selfC.length}<span style={{fontSize:14}}>件</span><span style={{fontSize:16,color:'var(--text-muted)',margin:'0 6px'}}>/</span>{ptC.length}<span style={{fontSize:14}}>件</span></div><div className="kpi-sub">自社粗利¥{selfRev.toLocaleString()} / パートナー粗利¥{(ptRev-ptCost).toLocaleString()}</div></div>
+</div>
+<div className="grid-2">
+<div className="panel"><div className="panel-header"><h3>👤 稼働者別</h3></div><table><thead><tr><th>稼働者</th><th>所属</th><th>案件数</th><th>売上合計</th><th>粗利</th><th>構成比</th></tr></thead><tbody>
+{Object.entries(byP).map(([n,d])=><tr key={n}><td style={{fontWeight:600}}>{n}</td><td><span className={`badge-s ${d.belong.includes('自社')?'confirmed':'info'}`}>{d.belong}</span></td><td>{d.n}件</td><td style={{fontWeight:700,fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>¥{d.t.toLocaleString()}</td><td style={{color:'var(--green)',fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>¥{(d.t-d.cost).toLocaleString()}</td><td><div style={{display:'flex',alignItems:'center',gap:8}}><div className="progress" style={{width:80}}><div className="fill" style={{width:`${gt>0?d.t/gt*100:0}%`,background:'var(--gold)'}}/></div><span style={{fontSize:12}}>{gt>0?(d.t/gt*100).toFixed(1):0}%</span></div></td></tr>)}
+</tbody></table></div>
+<div className="panel"><div className="panel-header"><h3>📊 事業部別</h3></div><table><thead><tr><th>事業部</th><th>案件数</th><th>売上合計</th><th>粗利</th><th>構成比</th></tr></thead><tbody>
+{Object.entries(byB).sort((a,b)=>b[1].t-a[1].t).map(([k,d])=>{const b=BIZ.find(x=>x.id===k);return<tr key={k}><td><span style={{display:'inline-block',width:10,height:10,borderRadius:3,background:b?.color,marginRight:8}}/>{b?.name}</td><td>{d.n}件</td><td style={{fontWeight:700,fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>¥{d.t.toLocaleString()}</td><td style={{color:'var(--green)',fontFamily:"'Inter','Noto Sans JP',sans-serif"}}>¥{(d.t-d.cost).toLocaleString()}</td><td><div style={{display:'flex',alignItems:'center',gap:8}}><div className="progress" style={{width:80}}><div className="fill" style={{width:`${gt>0?d.t/gt*100:0}%`,background:b?.color}}/></div><span style={{fontSize:12}}>{gt>0?(d.t/gt*100).toFixed(1):0}%</span></div></td></tr>})}
+</tbody></table></div>
+</div></>;
+}
+
+ReactDOM.createRoot(document.getElementById('app')).render(<App/>);
+</script>
+</body>
+</html>
