@@ -157,7 +157,7 @@ table{min-width:500px}.global-filter{flex-wrap:wrap}
 const {useState,useEffect,useRef,useCallback}=React;
 
 // ========== 設定 ==========
-const SHEET_ID='1cj_VW9cyQjSIr2poEFTEiU6sxzx9kB3e';
+const SHEET_ID='1KRPoPo1bvYNTXj3-fotkKsurlpEXOURU';
 const SHEETS={cases:'案件一覧',staff:'スタッフ',partners:'取引先'};
 
 const BIZ=[
@@ -285,7 +285,7 @@ const[clients,setClients]=useState([]);
 const[partners,setPartners]=useState([]);
 const[staff,setStaff]=useState([]);
 const[alerts,setAlerts]=useState([]);
-const[chatMsgs,setChatMsgs]=useState([{role:'ai',text:'エースキャリアオール AIアシスタントです。\n\nスプレッドシートから自動読み込まれたデータに基づいて回答します。\n\n質問例：\n・「今月の請求対象を教えて」\n・「支払いスケジュール」\n・「自社 vs パートナー」\n・「売上サマリー」'}]);
+const[chatMsgs,setChatMsgs]=useState([{role:'ai',text:'エースキャリアオール AIアシスタントです。\n\nスプレッドシートから自動読み込みされたデータに基づいて回答します。\n\n質問例：\n・「今月の請求対象を教えて」\n・「支払いスケジュール」\n・「自社 vs パートナー」\n・「売上サマリー」'}]);
 const[bizFilter,setBizFilter]=useState('all');
 const[loading,setLoading]=useState(true);
 const[syncTime,setSyncTime]=useState(null);
@@ -342,7 +342,7 @@ const unread=alerts.filter(a=>!a.read).length;
 const nav=[
 {id:'dashboard',icon:'📊',label:'ダッシュボード'},
 {id:'cases',icon:'📋',label:'案件管理'},
-{id:'partners',icon:'🤝',label:'契約マスター'},
+{id:'partners',icon:'🤝',label:'契紀マスター'},
 {id:'billing',icon:'💰',label:'請求・支払い'},
 {id:'ai',icon:'🤖',label:'AIアシスタント'},
 {id:'alerts',icon:'🔔',label:'アラート'},
@@ -622,12 +622,12 @@ return`💰 支払いスケジュール\n\n${cases.filter(c=>c.payDue).sort((a,b
 if(t.includes('売上')||t.includes('合計')||t.includes('サマリー')){
 const gt=cases.reduce((s,c)=>s+c.amount,0);const gc=cases.reduce((s,c)=>s+c.cost+(c.transport||0),0);
 const selfC=cases.filter(c=>(c.belong||'').includes('自社'));const ptC=cases.filter(c=>c.belong&&!(c.belong||'').includes('自社'));
-return`📊 売上サマリー\n\n全案件: ${cases.length}件\n売上合計: ¥${gt.toLocaleString()}\n原価合計: ¥${gc.toLocaleString()}\n粗利合計: ¥${(gt-gc).toLocaleString()}\n粗利率: ${gt>0?((gt-gc)/gt*100).toFixed(1):0}%\n\n【内訳】\n自社稼�M: ${selfC.length}件（売上¥${selfC.reduce((s,c)=>s+c.amount,0).toLocaleString()}）\nパートナー稼働: ${ptC.length}件（売上¥${ptC.reduce((s,c)=>s+c.amount,0).toLocaleString()}）`}
+return`📊 売上サマリー\n\n全案件: ${cases.length}件\n売上合計: ¥${gt.toLocaleString()}\n原価合計: ¥${gc.toLocaleString()}\n粗利合計: ¥${(gt-gc).toLocaleString()}\n粗利率: ${gt>0?((gt-gc)/gt*100).toFixed(1):0}%\n\n【内訳】\n自社稼�n: ${selfC.length}件（売上¥${selfC.reduce((s,c)=>s+c.amount,0).toLocaleString()}）\nパートナー稼働: ${ptC.length}件（売上¥${ptC.reduce((s,c)=>s+c.amount,0).toLocaleString()}）`}
 if((t.includes('自社')&&t.includes('パートナー'))||t.includes('内訳')||t.includes('所属')){
 const selfC=cases.filter(c=>(c.belong||'').includes('自社'));const ptC=cases.filter(c=>c.belong&&!(c.belong||'').includes('自社'));
 const selfRev=selfC.reduce((s,c)=>s+c.amount,0);const ptRev=ptC.reduce((s,c)=>s+c.amount,0);const ptCost=ptC.reduce((s,c)=>s+c.cost+(c.transport||0),0);
-return`📊 自社 vs パートナー 内訳\n\n【自社スタッフ稼働】${selfC.length}件\n売上: ¥${selfRev.toLocaleString()}\n原価: ¥0（自社のため）\n粗利: ¥${selfRev.toLocaleString()}\n\n【パートナー稼働】${ptC.length}件\n売上: ¥${ptRev.toLocaleString()}\n原価: ¥${ptCost.toLocaleString()}\n粗利: ¥${(ptRev-ptCost).toLocaleString()}\n\n${ptC.map(c=>`・${c.name} → ${c.belong}（稼働者:${c.person}）`).join('\n')}`}
-return`ご質問を璆解しました。以下をお試しください：\n\n・「今月の請求対象を教えて」\n・「ファーストプロジェクトの単価は？」\n・「支払いスケジュール」\n・「売上サマリー」\n・「自社 vs パートナー」\n・「稼働者一覧」`}
+return`📊 自社 vs パートナー 内訳\n\n【自社スタッフ稼働> �{selfC.length}件\n売上: ¥${selfRev.toLocaleString()}\n原価: ¥0（自社のため）\n粗利: ¥${selfRev.toLocaleString()}\n\n【パートナー片働^{$ptC.length}件\n売上: ¥${ptRev.toLocaleString()}\n原価: ¥${ptCost.toLocaleString()}\n粗利: ¥${(ptRev-ptCost).toLocaleString()}\n\n${ptC.map(c=>`・${c.name} → ${c.belong}（稼働者:${c.person}）`).join('\n')}`}
+return`ご質問を理解しました。以下をお試しください：\n\n・「今月の請求対象を教えて」\n・「ファーストプロジェクトの単価は？」\n・「支払いスケジュール」\n・「売上サマリー」\n・「自社 vs パートナー」\n・「稼働者一覧」`}
 
 function send(){if(!input.trim())return;const u=input.trim();setMsgs(p=>[...p,{role:'user',text:u}]);setInput('');setTimeout(()=>setMsgs(p=>[...p,{role:'ai',text:ai(u)}]),400)}
 
@@ -638,7 +638,7 @@ return<div className="chat-wrap"><div className="chat-msgs" ref={ref}>{msgs.map(
 // ============ ALERTS ============
 function AlertsPage({alerts,setAlerts}){
 return<><div style={{display:'flex',justifyContent:'space-between',marginBottom:18}}><span style={{fontSize:13,color:'var(--text-light)'}}>未読: {alerts.filter(a=>!a.read).length}件</span><button className="btn btn-outline btn-sm" onClick={()=>setAlerts(p=>p.map(a=>({...a,read:true})))}>全て既読</button></div>
-{alerts.length?alerts.map(a=><div key={a.id} className={`alert-item ${a.type}`} style={{opacity:a.read?.5:1,cursor:'pointer'}} onClick={()=>setAlerts(p=>p.map(x=>x.id===a.id?{...x,read:true}:x))}><div className="a-title">{a.read?'':'🔴 '}{a.title}</div><div className="a-body">{a.msg}</div><div className="a-time">{a.time}{a.read?' ✓既読':''}</div></div>):<EmptyState icon="🔔" title="アラートなし" sub="新しいアラートが発生するとここに表示されます"/>}
+{alerts.length?alerts.map(a=><div key={a.id} className={`alert-item ${a.type}`} style={{opacity:a.read?.5:1,cursor:'pointer'}} onClick={()=>setAlerts(p=>p.map(x=>x.id===a.id?{...x,read:true}:x))}><div className="a-title">{a.read?'':'🔴 '}{a.title}</div><div className="a-body">{a.msg}</div><div className="a-time">{a.time}{a.read?' ✓旤読':''}</div></div>):<EmptyState icon="🔔" title="アラートなし" sub="新しいアラートが発生するとここに表示されます"/>}
 </>;
 }
 
